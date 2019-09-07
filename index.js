@@ -1,25 +1,10 @@
 #! /usr/bin/env node
 
-const TwitterClient = require('twit')
 const download = require('image-downloader')
 const magick = require('imagemagick')
+const shell = require('shelljs')
 const fs = require('fs-extra')
 const homedir = require('os').homedir()
-
-require('dotenv').config()
-
-const auth =  {
-  consumer_key: process.env.API_KEY,
-  consumer_secret: process.env.API_KEY_SECRET,
-  access_token: process.env.ACCESS_TOKEN,
-  access_token_secret: process.env.ACCESS_TOKEN_SECRET
-}
-
-if (!Object.values(auth).every(k => k !== '')) {
-  throw new Error ('Missing environment variables.')
-}
-
-const t = new TwitterClient(auth)
 
 const pattern = /http(?:s)?:\/\/(?:www\.)?twitter\.com\/(?<username>[a-zA-Z0-9_]+)\/status\/(?<id>[a-zA-Z0-9_]+)/gi
 
@@ -34,13 +19,14 @@ if (!args[0].match(pattern)) {
 
 const {groups: {username, id}} = pattern.exec(tweet);
 
-t.get('statuses/show/:id', { id }, async (err, data, response) => {
-  const url = data.entities.media[0].media_url_https
-  const dest = process.env.OUT_DEST || `${homedir}/Desktop`
+// Fetch and parse the image from twitter
+const stdout = shell.exec(`curl -s ${tweet} | grep 'property="og:image"' | cut -d'"' -f4`)
 
-  // Download the image to a specified destination
-  const { filename } = await download.image({ url, dest })
+const url = stdout.substring(0, stdout.indexOf(':large'))
+const dest = process.env.OUT_DEST || `${homedir}/Desktop`
 
+// Download the image to a specified destination
+download.image({ url, dest }).then(({ filename }) => {
   // Convert the image into a Slack-worthy emoji
   convertImage(filename, id, dest)
 })
