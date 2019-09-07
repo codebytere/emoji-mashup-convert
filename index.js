@@ -2,11 +2,14 @@
 
 const download = require('image-downloader')
 const magick = require('imagemagick')
-const shell = require('shelljs')
+const { exec } = require('shelljs')
 const fs = require('fs-extra')
 const homedir = require('os').homedir()
 
-const pattern = /http(?:s)?:\/\/(?:www\.)?twitter\.com\/(?<username>[a-zA-Z0-9_]+)\/status\/(?<id>[a-zA-Z0-9_]+)/gi
+require('colors')
+const pass = '✓'.green
+
+const pattern = /http(?:s)?:\/\/(?:www\.)?twitter\.com\/EmojiMashupBot\/status\/(?<id>[a-zA-Z0-9_]+)/gi
 
 const args = process.argv.slice(2)
 
@@ -17,10 +20,11 @@ if (!args[0].match(pattern)) {
   tweet = args[0]
 }
 
-const {groups: {username, id}} = pattern.exec(tweet);
+const {groups: {id}} = pattern.exec(tweet);
 
 // Fetch and parse the image from twitter
-const stdout = shell.exec(`curl -s ${tweet} | grep 'property="og:image"' | cut -d'"' -f4`)
+const execString = `curl -s ${tweet} | grep 'property="og:image"' | cut -d'"' -f4`
+const stdout = exec(execString, { silent: true })
 
 const url = stdout.substring(0, stdout.indexOf(':large'))
 const dest = process.env.OUT_DEST || `${homedir}/Desktop`
@@ -37,7 +41,7 @@ const convertImage = (path, id, dest) => {
 
   magick.convert(options, async err => {
     if (err) throw err
-    console.log(`Successfully converted ${username}'s tweet with id ${id}.`)
+    console.log(`${pass} Converted image output to: ${dest}/${id}.png`)
   
     // Remove original file
     await fs.remove(path)
