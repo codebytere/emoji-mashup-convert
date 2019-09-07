@@ -8,12 +8,18 @@ const homedir = require('os').homedir()
 
 require('dotenv').config()
 
-const t = new TwitterClient({
+const auth =  {
   consumer_key: process.env.API_KEY,
   consumer_secret: process.env.API_KEY_SECRET,
   access_token: process.env.ACCESS_TOKEN,
   access_token_secret: process.env.ACCESS_TOKEN_SECRET
-})
+}
+
+if (!Object.values(auth).every(k => k !== '')) {
+  throw new Error ('Missing environment variables.')
+}
+
+const t = new TwitterClient(auth)
 
 const pattern = /http(?:s)?:\/\/(?:www\.)?twitter\.com\/(?<username>[a-zA-Z0-9_]+)\/status\/(?<id>[a-zA-Z0-9_]+)/gi
 
