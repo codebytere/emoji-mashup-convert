@@ -1,6 +1,6 @@
 # emoji-mashup-convert
 
-This cli tool converts media from tweets into emojis which can then be uploaded to the Slack workspace of your choice
+This cli tool converts media from tweets into emojis which can then be uploaded to the Slack workspace of your choice.
 
 ## Requirements
 

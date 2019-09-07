@@ -1,6 +1,6 @@
 {
   "name": "emoji-mashup-convert",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Convert images from tweets into Slack-worthy emojis.",
   "main": "index.js",
   "repository": {
