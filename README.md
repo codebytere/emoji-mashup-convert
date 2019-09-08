@@ -11,4 +11,4 @@ $ emoji-mashup-convert https://twitter.com/EmojiMashupBot/status/116887180904915
 # ✓ Converted image output to: /Users/codebytere/Desktop/1170366675788750849.png
 ```
 
-By default, the converted photo will go to `/path/to/Desktop` but if you'd like it to go elsewhere, you can set `process.env.OUT_DEST`.
+By default, the converted photo will go to `/path/to/Desktop` but if you'd like it to go elsewhere, you can set `process.env.OUT_DEST` to specify a custom destination.

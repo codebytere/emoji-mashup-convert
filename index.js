@@ -9,21 +9,23 @@ const homedir = require('os').homedir()
 require('colors')
 const pass = '✓'.green
 
-const pattern = /http(?:s)?:\/\/(?:www\.)?twitter\.com\/EmojiMashupBot\/status\/(?<id>[a-zA-Z0-9_]+)/gi
+// Let users pass in sketchy tweet urls; we only care about the tweet ID
+const pattern = /twitter\.com\/EmojiMashupBot\/status\/(?<id>[a-zA-Z0-9_]+)/gi
 
 const args = process.argv.slice(2)
 
-let tweet
+let urlArg
 if (!args[0].match(pattern)) {
   throw new Error(`${args[0]} is not a valid tweet.`)
 } else {
-  tweet = args[0]
+  urlArg = args[0]
 }
 
-const {groups: {id}} = pattern.exec(tweet);
+const {groups: {id}} = pattern.exec(urlArg);
 
-// Fetch and parse the image from twitter
-const execString = `curl -s ${tweet} | grep 'property="og:image"' | cut -d'"' -f4`
+// Fetch and parse the image from twitter, ensuring the URL is composed in the format we need
+const tweetURL = `https://twitter.com/EmojiMashupBot/status/${id}`
+const execString = `curl -s ${tweetURL} | grep 'property="og:image"' | cut -d'"' -f4`
 const stdout = exec(execString, { silent: true })
 
 const url = stdout.substring(0, stdout.indexOf(':large'))
