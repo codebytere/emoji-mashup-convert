@@ -35,6 +35,16 @@ inquirer.prompt([
     message: 'Upload emoji to Slack workspace?',
   },
   {
+    type: 'input',
+    name: 'emojiName',
+    message: 'Enter name of new emoji:',
+    when: (response) => response.upload,
+    validate: (input) => {
+      if (input !== '') return true
+      return 'Emoji name cannot be an empty string.'
+    }
+  },
+  {
     type: 'password',
     name: 'slackToken',
     when: (response) => response.upload && !process.env.SLACK_TOKEN,
@@ -68,7 +78,7 @@ inquirer.prompt([
       const form = new FormData()
       form.append('token', token)
       form.append('mode', 'data')
-      form.append('name', 'bell-delete-me')
+      form.append('name', answers.emojiName)
       form.append('image', fs.createReadStream(outPath))
 
       // We need to post to the raw endpoint (not public so not in WebClient)

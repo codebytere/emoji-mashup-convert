@@ -6,8 +6,9 @@ This cli tool converts media from tweets into emojis and then optionally uploads
 
 ```sh
 $ emoji-mashup-convert
-? Enter tweet url: # https://twitter.com/EmojiMashupBot/status/1168871809049157632
+? Enter tweet url: # https://twitter.com/EmojiMashupBot/status/1172404610159411200
 ? Upload emoji to Slack workspace? # Yes
+? Enter name of new emoji: # sad-expressionless
 ? Enter Slack user token # xoxs-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # On success, outputs:
